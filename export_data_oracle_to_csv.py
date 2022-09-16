@@ -3,10 +3,12 @@ from oracle_database_conf import oracle_connect
 
 def get_all_tables(cur):
     query = 'SELECT table_name FROM user_tables'
-    cur.execute(query)
-    for i in cur.fetchall():
-        print(i[0])
-        oracle_to_csv(cur,i[0])
+    get_tables = cur.execute(query)
+    if get_tables.rowcount == 0:
+        print("no tables found in {} database".format(db_name))
+    else:
+        for i in get_tables.fetchall():
+            oracle_to_csv(cur,i[0])
 
 def oracle_to_csv(cur,table_name):
     with open("{}.csv".format(table_name), "w", encoding='utf-8') as outputfile:

@@ -1,13 +1,16 @@
 import numpy as np
 import pandas as pd
 import re
+import ntpath
+import os
 import cx_Oracle
 from datetime import datetime
 from dateutil import parser
 from oracle_database_conf import oracle_connect
 
 csv_file_path = r"D:\employees.csv"     # MENTION CSV FILE PATH
-database_name = "SANTU"                 # mention table name creates
+head, tail = ntpath.split(csv_file_path)
+table_name = tail.replace(".csv","").replace(" ","_")
 
 def extract_file_data(path,database_name,cur,con):
     data = pd.read_csv(path)
@@ -31,7 +34,7 @@ def get_columns_csv(df):
                 db_col = col + ' VARCHAR2({})'.format(varch_len)
                 query.append(db_col)
         else:
-            db_col = col + ' NUMBER(20)'
+            db_col = col + ' NUMBER'
             query.append(db_col)
     return query
 
